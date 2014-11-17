@@ -1,35 +1,26 @@
+
+HeroCommand = Struct.new(:api, :action, :value)
+
 class Hero
   def initialize io, password
     @io = io
     @password = password
   end
 
-  def power_on!
-    io.get( uri_for( "bacpac", "PW", "%01" ) )
-  end
+  COMMANDS = {
+    power_on!:     HeroCommand.new("bacpac", "PW", "%01"),
+    power_off!:    HeroCommand.new("bacpac", "PW", "%00"),
+    start_capture: HeroCommand.new("camera", "SH", "%01"),
+    stop_capture:  HeroCommand.new("camera", "SH", "%00"),
+    start_beep:    HeroCommand.new("camera", "LL", "%01"),
+    stop_beep:     HeroCommand.new("camera", "LL", "%00"),
+    delete_last!:  HeroCommand.new("camera", "DL"),
+  }
 
-  def power_off!
-    io.get( uri_for( "bacpac", "PW", "%00" ) )
-  end
-
-  def start_capture
-    io.get( uri_for( "camera", "SH", "%01" ) )
-  end
-
-  def stop_capture
-    io.get( uri_for( "camera", "SH", "%00" ) )
-  end
-
-  def start_beep
-    io.get( uri_for( "camera", "LL", "%01" ) )
-  end
-
-  def stop_beep
-    io.get( uri_for( "camera", "LL", "%00" ) )
-  end
-
-  def delete_last!
-    io.get( uri_for( "camera", "DL" ) )
+  COMMANDS.each do |k, v|
+    define_method("#{k}") {
+      io.get( uri_for( v.api, v.action, v.value  ) )
+    }
   end
 
   private
