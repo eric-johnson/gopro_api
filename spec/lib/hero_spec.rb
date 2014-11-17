@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Hero do
-  let( :transit ) {}
+  let( :transit ) { Class.new }
 
   subject {
     described_class.new transit, "abc123"
