@@ -2,13 +2,10 @@ class Hero
 
   Command = Struct.new(:api, :action, :value)
 
-  attr_accessor :discovery
-
   def initialize( password, io=nil )
     require 'net/http' unless io
     @io = io || ::Net::HTTP
-    @discovery = {}
-    
+
     @password = password
   end
 
@@ -50,8 +47,8 @@ class Hero
     io.get( uri_for( "camera", "TI", "%#{arg}" ) )
   end
 
-  def d(comment)
-    discovery[comment] = io.get( uri_for( "camera", "sx" ) )
+  def on?
+    io.get( uri_for( "bacpac", "se" ) )[15] == "\x01"
   end
 
   MODE_BYTE = {
