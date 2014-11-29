@@ -1,0 +1,1 @@
+require 'gopro_api/hero'
